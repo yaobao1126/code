@@ -1,0 +1,43 @@
+https://io.zouht.com/154.html
+map:
+map是 C++ STL 中一个非常实用的关联容器，它存储的是键值对（key-value），并且会根据键的大小自动排序。你可以把它想象成一个下标可以是任意类型（比如字符串、结构体）的数组。
+1.使用 map 前，需要包含头文件：
+#include <map>
+2. 定义一个 map：
+map<key_type, value_type> map_name;
+eg. 
+map<int, int> mp;           // 键是 int，值也是 int
+map<string, int> scores;    // 键是 string（姓名），值是 int（分数）
+map<int, map<int, int>> nested; // 二维 map，键是 int，值是另一个 map
+3.插入数据
+有几种常见的插入方式：
+mp[5] = 100;      // 将键 5 对应的值设为 100
+mp[3] = 200;      // 如果键 3 不存在，会自动创建
+如果键已存在，[] 会直接修改对应的值；如果键不存在，则会先创建该键，然后将值设为默认值（比如 int 默认为 0），再赋新值。
+
+mp.insert({2, 300});           // 插入键值对 {2,300}
+mp.insert(pair<int,int>(4,400)); // 另一种写法
+4.访问元素
+通过 [] 访问（如果键不存在，会自动创建该键并赋默认值）：
+cout << mp[5] << endl;  // 输出 100
+cout << mp[999] << endl; // 键 999 不存在，会创建并输出默认值 0
+通过 at() 访问（如果键不存在，会抛出异常，更安全）：
+cout << mp.at(5) << endl;   // 输出 100
+// cout << mp.at(999) << endl; // 运行时错误：out_of_range
+5.查找元素（判断键是否存在）
+使用 find 函数，它返回一个迭代器。如果找到，迭代器指向该元素；否则返回 end()。
+auto it = mp.find(5);
+if (it != mp.end()) {
+    cout << "找到了，键：" << it->first << "，值：" << it->second << endl;
+} else {
+    cout << "没找到" << endl;
+}
+6.遍历 map
+可以用范围 for 循环（C++11 起）：
+for (auto &p : mp) {
+    cout << p.first << " -> " << p.second << endl;
+}
+因为 map 内部是有序的（默认按键升序），遍历时按键的顺序输出。
+7.删除元素：
+mp.erase(5);          // 删除键为 5 的元素
+mp.erase(it);         // 删除迭代器指向的元素
