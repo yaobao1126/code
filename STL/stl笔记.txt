@@ -1,0 +1,138 @@
+https://io.zouht.com/154.html
+map:
+map是 C++ STL 中一个非常实用的关联容器，它存储的是键值对（key-value），并且会根据键的大小自动排序。你可以把它想象成一个下标可以是任意类型（比如字符串、结构体）的数组。
+1.使用 map 前，需要包含头文件：
+#include <map>
+2. 定义一个 map：
+map<key_type, value_type> map_name;
+eg. 
+map<int, int> mp;           // 键是 int，值也是 int
+map<string, int> scores;    // 键是 string（姓名），值是 int（分数）
+map<int, map<int, int>> nested; // 二维 map，键是 int，值是另一个 map
+3.插入数据
+有几种常见的插入方式：
+mp[5] = 100;      // 将键 5 对应的值设为 100
+mp[3] = 200;      // 如果键 3 不存在，会自动创建
+如果键已存在，[] 会直接修改对应的值；如果键不存在，则会先创建该键，然后将值设为默认值（比如 int 默认为 0），再赋新值。
+
+mp.insert({2, 300});           // 插入键值对 {2,300}
+mp.insert(pair<int,int>(4,400)); // 另一种写法
+4.访问元素
+通过 [] 访问（如果键不存在，会自动创建该键并赋默认值）：
+cout << mp[5] << endl;  // 输出 100
+cout << mp[999] << endl; // 键 999 不存在，会创建并输出默认值 0
+通过 at() 访问（如果键不存在，会抛出异常，更安全）：
+cout << mp.at(5) << endl;   // 输出 100
+// cout << mp.at(999) << endl; // 运行时错误：out_of_range
+5.查找元素（判断键是否存在）
+使用 find 函数，它返回一个迭代器。如果找到，迭代器指向该元素；否则返回 end()。
+auto it = mp.find(5);
+if (it != mp.end()) {
+    cout << "找到了，键：" << it->first << "，值：" << it->second << endl;
+} else {
+    cout << "没找到" << endl;
+}
+6.遍历 map
+可以用范围 for 循环（C++11 起）：
+for (auto &p : mp) {
+    cout << p.first << " -> " << p.second << endl;
+}
+因为 map 内部是有序的（默认按键升序），遍历时按键的顺序输出。
+7.删除元素：
+mp.erase(5);          // 删除键为 5 的元素
+mp.erase(it);         // 删除迭代器指向的元素
+
+set:
+set是一个非常实用的关联容器，它的特点是自动排序且元素唯一（即不允许重复值）。你可以把它理解为一个自动去重并排序的集合。
+1. 引入头文件：
+#include <set>
+2.定义一个 set：
+set<元素类型> 集合名;
+eg.
+set<int> s;                // 存放 int 的集合
+set<string> names;         // 存放 string 的集合
+set<pair<int,int>> points; // 也可以存放自定义类型（需要支持比较）
+3. 插入元素（insert）
+eg.s.insert(10);
+s.insert(5);
+s.insert(8);
+s.insert(5);  // 重复插入 5，第二次插入会被忽略
+4.删除元素（erase）
+按值删除：s.erase(5); 删除值为 5 的元素。
+按迭代器删除：s.erase(it); 删除迭代器指向的元素。(迭代器是一个指针)
+删除一段区间：s.erase(first, last); 删除迭代器区间内的元素。
+5.查找元素
+find(key)：返回指向 key 的迭代器，如果找不到则返回 end()。
+auto it = s.find(8);
+if (it != s.end()) {
+    cout << "找到了：" << *it << endl;
+} else {
+    cout << "没找到" << endl;
+}
+6.遍历 set
+可以用范围 for 循环（C++11 起）：
+for (int x : s) {
+    cout << x << " ";  // 输出结果一定是升序且无重复
+}
+7.其他常用成员函数
+s.size()：返回元素个数。
+s.empty()：判断是否为空。
+s.clear()：清空所有元素。
+s.lower_bound(k)：返回第一个大于等于 k 的元素的迭代器。
+s.upper_bound(k)：返回第一个大于 k 的元素的迭代器。
+还有一种prev(it)用于求it前一个值对应的迭代器，也是一个指针。
+8.应用：
+去重：给一个数组，输出去重后的有序结果。
+vector<int> v = {4, 1, 2, 2, 3, 1, 4};
+set<int> s(v.begin(), v.end());
+for (int x : s) cout << x << " "; // 输出 1 2 3 4
+
+queue：
+queue（队列）是 C++ STL 中一种先进先出（FIFO，First In First Out）的容器适配器。它就像现实生活中的排队一样，最先进入队列的元素会最先被取出。
+1. 引入头文件:
+#include <queue>
+2.定义一个 queue
+queue<数据类型> 队列名;
+eg.
+queue<int> q;          // 存放 int 的队列
+queue<string> qs;      // 存放 string 的队列
+queue<pair<int,int>> qp; // 存放自定义类型的队列
+3. 核心成员函数
+函数	作用
+push(x)	将元素 x 放入队尾
+pop()	删除队首元素（不返回该元素）
+front()	返回队首元素的引用（可读可写）
+back()	返回队尾元素的引用（可读可写）
+empty()	判断队列是否为空，空返回 true，否则 false
+size()	返回队列中的元素个数
+注意：
+pop() 只删除元素，不返回被删元素的值。如果需要获取队首值再删除，通常先 front() 取值，再 pop()。
+调用 front() 或 back() 前应确保队列非空，否则会导致未定义行为。
+tip:
+不支持随机访问：不能通过下标访问元素，只能通过 front/back 访问两端。
+性能：push 和 pop 操作通常为 O(1)。
+
+stack:
+stack(栈）是 C++ STL 中的一种后进先出（LIFO，Last In First Out）容器适配器。它就像一叠盘子，最后放上去的盘子会最先被拿走。
+1.引入头文件
+#include <stack>
+2.定义一个 stack
+stack<数据类型> 栈名;
+eg.stack<int> st;          // 存放 int 的栈
+stack<string> st_str;   // 存放 string 的栈
+stack<pair<int,int>> st_pair; // 存放自定义类型的栈
+3.核心成员函数
+函数		作用
+push(x)	将元素 x 压入栈顶
+pop()	弹出栈顶元素（不返回该元素）
+top()	返回栈顶元素的引用（可读可写）
+empty()	判断栈是否为空，空返回 true，否则 false
+size()	返回栈中的元素个数
+注意：
+pop() 只删除栈顶元素，不返回被删元素的值。如果需要获取栈顶值再删除，通常先 top() 取值，再 pop()。
+调用 top() 前应确保栈非空，否则会导致未定义行为。
+4.应用场景举例
+括号匹配：遍历字符串，遇到左括号压栈，遇到右括号时检查栈顶是否匹配。
+表达式求值（逆波兰表达式、中缀转后缀）。
+函数调用栈（递归的底层实现）。
+逆序输出：将元素压栈，再弹出即可得到逆序。
